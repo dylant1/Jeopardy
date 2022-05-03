@@ -3,13 +3,25 @@ import axios from "axios";
 import styled from "styled-components";
 
 const QuestionWrapper = styled.div`
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
   padding-bottom: 50px;
   flex-direction: column;
+  @media (max-width: 1024px) {
+    font-size: 25px;
+  }
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+  @media (max-width: 480px) {
+    font-size: 15px;
+  }
+  @media (max-width: 319px) {
+    font-size: 10px;
+  }
 `;
 const GameModeWrapper = styled.div`
   color: #1cbaf7;
@@ -24,17 +36,22 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
   margin-bottom: 150px;
+  @media (max-width: 1024px) {
+    margin-bottom: 150px;
+  }
+  @media (max-width: 768px) {
+    margin-bottom: 125px;
+  }
+  @media (max-width: 480px) {
+    margin-bottom: 100px;
+  }
+  @media (max-width: 319px) {
+    margin-bottom: 150px;
+  }
   margin-left: 50px;
   margin-right: 50px;
 `;
-const InputWrapper = styled.div``;
-const Input = styled.input`
-  outline: none;
-  border: none;
-  border-bottom: 1px solid black;
-  font-family: inherit;
-  font-size: 20px;
-`;
+
 const InformationWrapper = styled.div`
   display: flex;
   width: 100%;
@@ -42,6 +59,18 @@ const InformationWrapper = styled.div`
   justify-content: space-between;
   color: grey;
   font-size: 15px;
+  @media (max-width: 1024px) {
+    font-size: 15px;
+  }
+  @media (max-width: 768px) {
+    font-size: 10px;
+  }
+  @media (max-width: 480px) {
+    font-size: 8px;
+  }
+  @media (max-width: 319px) {
+    font-size: 7px;
+  }
 `;
 const Bar = styled.div`
   background-color: white;
@@ -62,18 +91,26 @@ const AnswerChoice = styled.div`
   padding-bottom: 5px;
   margin-bottom: 5px;
   margin-top: 5px;
-  font-size: 15px;
+  font-size: 20px;
   border: 1px solid transparent;
   border-radius: 2px;
   padding: 5px;
   display: flex;
   align-items: center;
+  @media (max-width: 1024px) {
+    font-size: 15px;
+  }
+  @media (max-width: 768px) {
+    font-size: 15px;
+  }
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
+  @media (max-width: 319px) {
+    font-size: 10px;
+  }
 `;
 export const JeopardyGame = (theme) => {
-  const [currentTheme, setcurrentTheme] = useState(theme);
-  const [textColor, setTextColor] = useState(
-    currentTheme === "light" ? "black" : "white"
-  );
   const [currentQuestion, setCurrentQuestion] = useState({
     question: "",
     answer: "",
@@ -83,22 +120,30 @@ export const JeopardyGame = (theme) => {
   });
   const [loaded, setLoaded] = useState(false);
   const [gameMode, setGameMode] = useState("Multiple Choice");
-  const [input, setInput] = useState("");
   useEffect(() => {
-    getQuestion();
+    if (gameMode === "Multiple Choice") {
+      getQuestion(null, "type=multiple");
+    } else if (gameMode === "True False") {
+      getQuestion(null, "type=boolean");
+    }
     progressBar();
   }, []);
+  useEffect(() => {
+    progressBar();
+  }, [loaded]);
   function handleMouseOver(index) {
     const finger = document.getElementById("finger-" + index);
     finger.style.opacity = "1";
   }
   function handleMultipleChoiceClick(value, e) {
     if (value === currentQuestion.answer) {
-      getQuestion(e);
+      if (gameMode === "Multiple Choice") {
+        getQuestion(e, "type=multiple");
+      } else if (gameMode === "True False") {
+        getQuestion(e, "type=boolean");
+      }
     } else {
-      // e.target.style.color = "red";
       e.target.style.textDecoration = "line-through";
-      //add multiple choice class
     }
   }
   function handleMouseLeave(index) {
@@ -122,10 +167,13 @@ export const JeopardyGame = (theme) => {
     }
   }
 
-  function multipleChoiceAnswers(wrong, correct) {
+  function multipleChoiceAnswers(correct, wrong, numQuestions = 4) {
     wrong.push(correct);
-    const set = new Set(wrong);
-    const arr = Array.from(set).sort();
+    let set = new Set(wrong);
+    let arr = Array.from(set).sort();
+    if (numQuestions === 2) {
+      arr = arr.reverse();
+    }
     return (
       <>
         {arr.map((value) => {
@@ -158,21 +206,31 @@ export const JeopardyGame = (theme) => {
               </span>
             </AnswerChoice>
           );
-        })}{" "}
+        })}
       </>
     );
   }
   function handleToggleMode() {
     if (gameMode === "Multiple Choice") {
-      setGameMode("Open Ended");
-    } else if (gameMode === "Open Ended") {
+      setGameMode((null, "True False"));
+      setLoaded(false);
+
+      getQuestion(null, "type=boolean");
+    } else if (gameMode === "True False") {
       setGameMode("Multiple Choice");
+      setLoaded(false);
+
+      getQuestion(null, "type=multiple");
     }
   }
-  const [storedQuestions, setStoredQuestions] = useState([]);
-  function getQuestion(e) {
+  function getQuestion(e = null, type) {
+    if (type === "type=multiple") {
+      setGameMode("Multiple Choice");
+    } else if (type === "type=boolean") {
+      setGameMode("True False");
+    }
     axios
-      .get("https://opentdb.com/api.php?amount=1&type=multiple")
+      .get(`https://opentdb.com/api.php?amount=1&${type}`)
 
       .then((res) => {
         const data = res.data;
@@ -186,8 +244,12 @@ export const JeopardyGame = (theme) => {
     if (e) {
       document.getElementById("question-0").style.textDecoration = "none";
       document.getElementById("question-1").style.textDecoration = "none";
-      document.getElementById("question-2").style.textDecoration = "none";
-      document.getElementById("question-3").style.textDecoration = "none";
+      if (document.getElementById("question-2")) {
+        document.getElementById("question-2").style.textDecoration = "none";
+      }
+      if (document.getElementById("question-3")) {
+        document.getElementById("question-3").style.textDecoration = "none";
+      }
     }
   }
 
@@ -210,21 +272,6 @@ export const JeopardyGame = (theme) => {
         return String.fromCharCode(num);
       });
   }
-  function lowercaseString(string) {
-    return string.toLowerCase();
-  }
-  const handleChange = (e) => {
-    setInput(e.target.value);
-  };
-  useEffect(() => {
-    if (gameMode === "Open Ended") {
-      if (lowercaseString(input) == lowercaseString(currentQuestion.answer)) {
-        getQuestion();
-
-        document.getElementById("input").value = "";
-      }
-    }
-  }, [input]);
 
   return (
     <>
@@ -246,37 +293,28 @@ export const JeopardyGame = (theme) => {
                     handleToggleMode();
                   }}
                 >
-                  Toggle gamemode
+                  Toggle Gamemode
                 </GameModeWrapper>
               </InformationWrapper>
               {parseString(currentQuestion.question)}
             </QuestionWrapper>
-            {gameMode === "Open Ended" && (
-              <div>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                  }}
-                >
-                  <Input
-                    onChange={handleChange}
-                    id="input"
-                    autoComplete="off"
-                    type="text"
-                    placeholder="Answer"
-                  />
-                </form>
-              </div>
-            )}
             {gameMode === "Multiple Choice" && (
               <div>
                 {multipleChoiceAnswers(
-                  currentQuestion.wrongAnswers,
-                  currentQuestion.answer
+                  currentQuestion.answer,
+                  currentQuestion.wrongAnswers
                 )}
               </div>
-            )}{" "}
-            {gameMode === "True False" && <div>True and False</div>}
+            )}
+            {gameMode === "True False" && (
+              <div>
+                {multipleChoiceAnswers(
+                  currentQuestion.answer,
+                  currentQuestion.wrongAnswers,
+                  2
+                )}
+              </div>
+            )}
           </>
         )}
       </Wrapper>

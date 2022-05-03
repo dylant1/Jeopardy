@@ -1,6 +1,5 @@
 import { Home } from "./Home";
 import styled from "styled-components";
-import { Navbar } from "./Navbar";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles } from "./globalStyles";
 import { useState } from "react";
@@ -8,7 +7,12 @@ import moon from "./assets/moon.svg";
 import sun from "./assets/sun.svg";
 import { lightTheme, darkTheme } from "./Theme";
 import { useEffect } from "react";
+import { Footer } from "./Footer";
 import "./global.css";
+import { Route, Switch } from "react-router-dom";
+import { About } from "./About";
+import { Link } from "react-router-dom";
+
 const PageWrapper = styled.div`
   padding: 0;
   margin: 0;
@@ -30,20 +34,72 @@ const NavbarWrapper = styled.div`
 `;
 const Logo = styled.div`
   font-weight: bold;
-  font-size: 20px;
+  font-size: 30px;
   display: flex;
   align-items: center;
+  @media (max-width: 1024px) {
+    font-size: 25px;
+  }
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
+  @media (max-width: 319px) {
+    font-size: 20px;
+  }
 `;
 const NavLinksWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
 `;
 const NavLink = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  margin-right: 10px;
+  text-align: center;
   margin-left: 10px;
+  justify-content: center;
+  font-size: 20px;
+  @media (max-width: 1024px) {
+    font-size: 17px;
+  }
+  @media (max-width: 768px) {
+    font-size: 15px;
+  }
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
+  @media (max-width: 319px) {
+    font-size: 20px;
+  }
+  &:hover {
+    text-decoration: underline;
+  }
+  width: 100%;
+`;
+const Img = styled.img`
+  max-width: 100%;
+`;
+const ImgWrapper = styled.div`
+  width: 42px;
+  @media (max-width: 1024px) {
+    width: 38px;
+  }
+  @media (max-width: 768px) {
+    width: 34px;
+  }
+  @media (max-width: 480px) {
+    width: 30px;
+  }
+  @media (max-width: 319px) {
+    width: 26px;
+  }
 `;
 
 function App() {
@@ -71,42 +127,68 @@ function App() {
         <NavbarWrapper>
           <Logo> Trivia</Logo>
           <NavLinksWrapper>
-            <NavLink>Play</NavLink>
-            <NavLink>About</NavLink>
-            {/* <NavLink>
-              <img src={githubIcon} width={30} alt="Github" />
-            </NavLink> */}
+            <Link
+              to="/"
+              style={
+                theme === "light"
+                  ? {
+                      color: "black",
+                      textDecoration: "none",
+                      textAlign: "center",
+                    }
+                  : { color: "white", textDecoration: "none" }
+              }
+            >
+              <NavLink>Play</NavLink>
+            </Link>
+            <Link
+              to="/about"
+              style={
+                theme === "light"
+                  ? { color: "black", textDecoration: "none" }
+                  : { color: "white", textDecoration: "none" }
+              }
+            >
+              <NavLink>About</NavLink>
+            </Link>
+
             <NavLink>
               {" "}
               {theme === "light" ? (
-                <span
+                <ImgWrapper
                   style={{
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  <img src={sun} onClick={themeToggler} width={30} />
-                </span>
+                  <Img src={sun} onClick={themeToggler} />
+                </ImgWrapper>
               ) : (
-                <span
+                <ImgWrapper
                   style={{
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  <img src={moon} onClick={themeToggler} width={30} />
-                </span>
+                  <Img src={moon} onClick={themeToggler} />
+                </ImgWrapper>
               )}
             </NavLink>
           </NavLinksWrapper>
         </NavbarWrapper>
-        <Home theme={theme} />
-        {
-          //add routes here
-        }
-        <div>footer</div>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/about">
+            <About />
+          </Route>
+        </Switch>
+        <Footer />
       </PageWrapper>
     </ThemeProvider>
   );
