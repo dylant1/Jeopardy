@@ -117,7 +117,7 @@ function App() {
       document.body.style.backgroundColor = "#363537";
       document.body.style.color = "#FAFAFA";
     }
-  }, []);
+  }, [theme]);
   return (
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       {" "}

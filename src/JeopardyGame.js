@@ -110,7 +110,7 @@ const AnswerChoice = styled.div`
     font-size: 10px;
   }
 `;
-export const JeopardyGame = (theme) => {
+export const JeopardyGame = () => {
   const [currentQuestion, setCurrentQuestion] = useState({
     question: "",
     answer: "",
@@ -127,7 +127,7 @@ export const JeopardyGame = (theme) => {
       getQuestion(null, "type=boolean");
     }
     progressBar();
-  }, []);
+  }, [gameMode]);
   useEffect(() => {
     progressBar();
   }, [loaded]);
