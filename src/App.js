@@ -181,8 +181,12 @@ function App() {
           </NavLinksWrapper>
         </NavbarWrapper>
         <Switch>
-          <Route exact path="/" element={<Home />}></Route>
-          <Route path="/about" element={<About />}></Route>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/about">
+            <About />
+          </Route>
         </Switch>
         <Footer />
       </PageWrapper>
