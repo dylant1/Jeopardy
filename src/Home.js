@@ -1,8 +1,8 @@
 import { JeopardyGame } from "./JeopardyGame";
-export const Home = () => {
+export const Home = (theme) => {
   return (
     <div>
-      <JeopardyGame />
+      <JeopardyGame theme={theme} />
     </div>
   );
 };
