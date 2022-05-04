@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
-
+import refresh from "./assets/refresh.svg";
 const QuestionWrapper = styled.div`
   font-size: 30px;
   font-weight: bold;
@@ -110,6 +110,23 @@ const AnswerChoice = styled.div`
     font-size: 10px;
   }
 `;
+const Img = styled.img`
+  width: 25px;
+  @media (max-width: 1024px) {
+    width: 25px;
+  }
+  @media (max-width: 768px) {
+    width: 18px;
+  }
+  @media (max-width: 480px) {
+    width: 10px;
+  }
+  @media (max-width: 319px) {
+    font-size: 10px;
+  }
+  margin-bottom: 5px;
+  cursor: pointer;
+`;
 export const JeopardyGame = () => {
   const [currentQuestion, setCurrentQuestion] = useState({
     question: "",
@@ -118,6 +135,7 @@ export const JeopardyGame = () => {
     category: "",
     wrongAnswers: [],
   });
+  const [deg, setDeg] = useState(180);
   const [loaded, setLoaded] = useState(false);
   const [gameMode, setGameMode] = useState("Multiple Choice");
   useEffect(() => {
@@ -127,7 +145,7 @@ export const JeopardyGame = () => {
       getQuestion(null, "type=boolean");
     }
     progressBar();
-  }, [gameMode]);
+  }, []);
   useEffect(() => {
     progressBar();
   }, [loaded]);
@@ -164,6 +182,18 @@ export const JeopardyGame = () => {
           element.style.width = width + "%";
         }
       }
+    }
+  }
+  let count = 1;
+  function handleRefresh() {
+    let spinner = document.getElementById("refresh");
+
+    spinner.style.transform = "rotate(" + deg + "deg)";
+    setDeg(deg + 180);
+    if (gameMode === "Multiple Choice") {
+      getQuestion(null, "type=multiple");
+    } else if (gameMode === "True False") {
+      getQuestion(null, "type=boolean");
     }
   }
 
@@ -285,6 +315,20 @@ export const JeopardyGame = () => {
           <>
             <QuestionWrapper>
               {" "}
+              <InformationWrapper
+                style={{
+                  flexDirection: "row-reverse",
+                }}
+              >
+                <Img
+                  src={refresh}
+                  onClick={() => {
+                    handleRefresh();
+                  }}
+                  style={{}}
+                  id="refresh"
+                />
+              </InformationWrapper>
               <InformationWrapper>
                 <span>{currentQuestion.category}</span>
 
@@ -293,7 +337,7 @@ export const JeopardyGame = () => {
                     handleToggleMode();
                   }}
                 >
-                  Toggle Gamemode
+                  {gameMode}
                 </GameModeWrapper>
               </InformationWrapper>
               {parseString(currentQuestion.question)}

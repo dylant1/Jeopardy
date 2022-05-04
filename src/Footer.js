@@ -2,6 +2,8 @@ import styled from "styled-components";
 import githubLogo from "./assets/github.png";
 import linkedinLogo from "./assets/linkedin.png";
 import instagramLogo from "./assets/instagram.png";
+import { SocialIcon } from "react-social-icons";
+
 const FooterWrapper = styled.div`
     width = 100%;
     background-color: #181818	;
@@ -19,53 +21,23 @@ const FooterWrapper = styled.div`
 
   }
   @media (max-width: 768px) {
-    height: 80px;    
     font-size: 15px;  
 
   }
   @media (max-width: 480px) {
-    height: 60px;  
-    font-size: 10px;  
+    font-size: 12px;
   }
-  @media (max-width: 319px) {
-    height: 40px;
+  @media (max-height: 900px) {
+    height: 80px;
   }
 `;
 const IconWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding-bottom: 5px;
 `;
-const Image = styled.img`
-  width: 30px;
-  @media (max-width: 1024px) {
-    width: 30px;
-  }
-  @media (max-width: 768px) {
-    width: 25px;
-  }
-  @media (max-width: 480px) {
-    width: 20px;
-  }
-  @media (max-width: 319px) {
-    width: 15px;
-  }
-`;
-const Linkedin = styled.img`
-  width: 40px;
-  @media (max-width: 1024px) {
-    width: 40px;
-  }
-  @media (max-width: 768px) {
-    width: 35px;
-  }
-  @media (max-width: 480px) {
-    width: 25px;
-  }
-  @media (max-width: 319px) {
-    width: 15px;
-  }
-`;
+
 const Link = styled.a`
   margin-left: 5px;
   margin-right: 5px;
@@ -75,18 +47,25 @@ export const Footer = () => {
     <FooterWrapper>
       <IconWrapper>
         <Link>
-          <Image
-            src={githubLogo}
-            style={{
-              filter: "invert(1)",
-            }}
+          <SocialIcon
+            url="https://github.com/dylant1"
+            bgColor="white"
+            style={{ height: 30, width: 30 }}
           />
         </Link>
         <Link>
-          <Linkedin src={linkedinLogo} />
+          <SocialIcon
+            url="https://instagram.com/in/jaketrent"
+            style={{ height: 30, width: 30 }}
+            fgColor="white"
+          />
         </Link>
         <Link>
-          <Image src={instagramLogo} />
+          <SocialIcon
+            url="https://linkedin.com/in/jaketrent"
+            fgColor="white"
+            style={{ height: 30, width: 30 }}
+          />
         </Link>
       </IconWrapper>
       Utilizes the OpenTDB Trivia API

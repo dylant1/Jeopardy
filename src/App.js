@@ -87,18 +87,18 @@ const Img = styled.img`
   max-width: 100%;
 `;
 const ImgWrapper = styled.div`
-  width: 42px;
+  width: 30px;
   @media (max-width: 1024px) {
-    width: 38px;
-  }
-  @media (max-width: 768px) {
-    width: 34px;
-  }
-  @media (max-width: 480px) {
     width: 30px;
   }
-  @media (max-width: 319px) {
+  @media (max-width: 768px) {
+    width: 28px;
+  }
+  @media (max-width: 480px) {
     width: 26px;
+  }
+  @media (max-width: 319px) {
+    width: 22px;
   }
 `;
 
@@ -117,7 +117,7 @@ function App() {
       document.body.style.backgroundColor = "#363537";
       document.body.style.color = "#FAFAFA";
     }
-  }, [theme]);
+  }, []);
   return (
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
       {" "}
