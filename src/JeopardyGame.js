@@ -93,6 +93,11 @@ const Loading = styled.div`
   height: 24px;
   color: white;
 `;
+const ShowAnswerWrapper = styled.div`
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 const AnswerChoice = styled.div`
   padding-top: 5px;
   padding-bottom: 5px;
@@ -399,7 +404,7 @@ export const JeopardyGame = () => {
                   }}
                 >
                   {!showAnswer ? (
-                    <div
+                    <ShowAnswerWrapper
                       style={{
                         cursor: "pointer",
                         display: "flex",
@@ -414,7 +419,7 @@ export const JeopardyGame = () => {
                       >
                         Show Answer
                       </span>
-                    </div>
+                    </ShowAnswerWrapper>
                   ) : (
                     <>{parseString(currentQuestion.answer)}</>
                   )}
