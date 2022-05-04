@@ -38,7 +38,7 @@ const IconWrapper = styled.div`
   padding-bottom: 5px;
 `;
 
-const Link = styled.a`
+const Link = styled.div`
   margin-left: 5px;
   margin-right: 5px;
 `;
@@ -48,25 +48,25 @@ export const Footer = () => {
       <IconWrapper>
         <Link>
           <SocialIcon
-            url="https://github.com/dylant1"
+            url="https://github.com/dylant1/trivia-app"
             bgColor="white"
             style={{ height: 30, width: 30 }}
           />
         </Link>
-        <Link>
+        {/* <Link>
           <SocialIcon
             url="https://instagram.com/in/jaketrent"
             style={{ height: 30, width: 30 }}
             fgColor="white"
           />
-        </Link>
-        <Link>
+        </Link> */}
+        {/* <Link>
           <SocialIcon
-            url="https://linkedin.com/in/jaketrent"
+            url="https://linkedin.com/in/dylantoth1"
             fgColor="white"
             style={{ height: 30, width: 30 }}
           />
-        </Link>
+        </Link> */}
       </IconWrapper>
       Utilizes the OpenTDB Trivia API
     </FooterWrapper>

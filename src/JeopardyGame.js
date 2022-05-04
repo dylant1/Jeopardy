@@ -80,6 +80,13 @@ const Bar = styled.div`
   margin-bottom: 50px;
   border-radius: 2px;
 `;
+const CheckMarkWrapper = styled.div`
+  position: absolute;
+  transform: scale(0.5);
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.5s;
+`;
 const Loading = styled.div`
   background-color: #1fc623;
   width: 1%;
@@ -127,6 +134,53 @@ const Img = styled.img`
   margin-bottom: 5px;
   cursor: pointer;
 `;
+const AnswerWrapper = styled.div`
+  color: #ff2825;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+function Eye() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className="icon icon-tabler icon-tabler-eye"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      strokeWidth="2.5"
+      stroke="#ff2825"
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <circle cx="12" cy="12" r="2" />
+      <path d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7" />
+    </svg>
+  );
+}
+function CheckMark() {
+  return (
+    <svg
+      width="347"
+      height="276"
+      viewBox="0 0 347 276"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M20.2843 142.142C28.0948 134.332 40.7581 134.332 48.5685 142.142L147.563 241.137L119.279 269.421C111.469 277.232 98.8054 277.232 90.9949 269.421L6.14214 184.569C-1.66835 176.758 -1.66835 164.095 6.14214 156.284L20.2843 142.142Z"
+        fill="#62B01F"
+      />
+      <path
+        d="M105 198.967L297.825 6.14214C305.635 -1.66834 318.299 -1.66835 326.109 6.14213L340.251 20.2843C348.062 28.0948 348.062 40.7581 340.251 48.5685L147.426 241.393L105 198.967Z"
+        fill="#62B01F"
+      />
+    </svg>
+  );
+}
+
 export const JeopardyGame = () => {
   const [currentQuestion, setCurrentQuestion] = useState({
     question: "",
@@ -135,6 +189,7 @@ export const JeopardyGame = () => {
     category: "",
     wrongAnswers: [],
   });
+  const [showAnswer, setShowAnswer] = useState(false);
   const [deg, setDeg] = useState(180);
   const [loaded, setLoaded] = useState(false);
   const [gameMode, setGameMode] = useState("Multiple Choice");
@@ -153,10 +208,20 @@ export const JeopardyGame = () => {
     const finger = document.getElementById("finger-" + index);
     finger.style.opacity = "1";
   }
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  const showCheckMark = async () => {
+    let checkMark = document.getElementById("check-mark-wrapper");
+    checkMark.style.visibility = "visible";
+    checkMark.style.opacity = "1";
+    await delay(500);
+    checkMark.style.visibility = "hidden";
+    checkMark.style.opacity = "0";
+  };
   function handleMultipleChoiceClick(value, e) {
     if (value === currentQuestion.answer) {
       if (gameMode === "Multiple Choice") {
         getQuestion(e, "type=multiple");
+        showCheckMark();
       } else if (gameMode === "True False") {
         getQuestion(e, "type=boolean");
       }
@@ -184,7 +249,6 @@ export const JeopardyGame = () => {
       }
     }
   }
-  let count = 1;
   function handleRefresh() {
     let spinner = document.getElementById("refresh");
 
@@ -254,6 +318,7 @@ export const JeopardyGame = () => {
     }
   }
   function getQuestion(e = null, type) {
+    setShowAnswer(false);
     if (type === "type=multiple") {
       setGameMode("Multiple Choice");
     } else if (type === "type=boolean") {
@@ -292,6 +357,8 @@ export const JeopardyGame = () => {
       lt: "<",
       gt: ">",
       eacute: "e",
+      ouml: "o",
+      Ouml: "O",
     };
     return encodedString
       .replace(translate_re, function (match, entity) {
@@ -315,11 +382,7 @@ export const JeopardyGame = () => {
           <>
             <QuestionWrapper>
               {" "}
-              <InformationWrapper
-                style={{
-                  flexDirection: "row-reverse",
-                }}
-              >
+              <InformationWrapper style={{}}>
                 <Img
                   src={refresh}
                   onClick={() => {
@@ -327,7 +390,33 @@ export const JeopardyGame = () => {
                   }}
                   style={{}}
                   id="refresh"
-                />
+                />{" "}
+                <AnswerWrapper
+                  onClick={() => {
+                    setShowAnswer(true);
+                  }}
+                >
+                  {!showAnswer ? (
+                    <div
+                      style={{
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Eye />{" "}
+                      <span
+                        style={{
+                          paddingLeft: "5px",
+                        }}
+                      >
+                        Show Answer
+                      </span>
+                    </div>
+                  ) : (
+                    <>{parseString(currentQuestion.answer)}</>
+                  )}
+                </AnswerWrapper>
               </InformationWrapper>
               <InformationWrapper>
                 <span>{currentQuestion.category}</span>
@@ -361,6 +450,9 @@ export const JeopardyGame = () => {
             )}
           </>
         )}
+        <CheckMarkWrapper id="check-mark-wrapper">
+          <CheckMark />
+        </CheckMarkWrapper>
       </Wrapper>
     </>
   );

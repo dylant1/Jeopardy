@@ -11,7 +11,7 @@ const AboutWrapper = styled.div`
 export const About = () => {
   return (
     <AboutWrapper>
-      <div>description</div>
+      <h1>WIP</h1>
     </AboutWrapper>
   );
 };
