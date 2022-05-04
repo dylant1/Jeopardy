@@ -24,3 +24,32 @@ body {
 .check-mark {
   position: absolute;
 }
+
+.eye-icon {
+  width: 25px;
+  height: 25px;
+}
+@media (max-width: 1024px) {
+  .eye-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .eye-icon {
+    width: 15px;
+    height: 15px;
+  }
+}
+@media (max-width: 480px) {
+  .eye-icon {
+    width: 10px;
+    height: 10px;
+  }
+}
+@media (max-width: 319px) {
+  .eye-icon {
+    width: 30px;
+    height: 30px;
+  }
+}
