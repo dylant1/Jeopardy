@@ -360,6 +360,7 @@ export const JeopardyGame = () => {
       eacute: "e",
       ouml: "o",
       Ouml: "O",
+      ldquo: '""',
     };
     return encodedString
       .replace(translate_re, function (match, entity) {
